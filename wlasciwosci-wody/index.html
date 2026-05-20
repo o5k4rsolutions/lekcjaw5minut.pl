@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Właściwości Wody - Chemia Klasa 7</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #0f172a; }
+        .heading-font { font-family: 'Quicksand', sans-serif; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        
+        @keyframes liquid-drip {
+            0%, 100% { transform: scaleY(1) scaleX(1) translateY(0); border-radius: 40% 60% 54% 46% / 49% 60% 40% 51%; }
+            30% { transform: scaleY(1.08) scaleX(0.92) translateY(3px); border-radius: 38% 62% 60% 40% / 43% 55% 45% 57%; }
+            60% { transform: scaleY(0.95) scaleX(1.05) translateY(-1px); border-radius: 45% 55% 48% 52% / 55% 48% 52% 45%; }
+        }
+        .dripping-mascot-container { animation: liquid-drip 4s ease-in-out infinite; }
+        @keyframes fall-drip {
+            0% { transform: translateY(-10px) scale(0.3); opacity: 0; }
+            15% { opacity: 0.9; transform: translateY(0) scale(1); }
+            75% { opacity: 0.9; transform: translateY(40px) scale(0.8); }
+            95%, 100% { transform: translateY(55px) scale(0); opacity: 0; }
+        }
+        .dripping-particle { animation: fall-drip 2.5s cubic-bezier(0.4, 0, 1, 1) infinite; }
+        .wave-bar { animation: quiet 1.2s ease-in-out infinite alternate; }
+        .wave-bar:nth-child(2) { animation-delay: 0.15s; }
+        .wave-bar:nth-child(3) { animation-delay: 0.3s; }
+        .wave-bar:nth-child(4) { animation-delay: 0.45s; }
+        .speaking .wave-bar { animation: active-wave 0.5s ease-in-out infinite alternate; }
+        @keyframes quiet { 0% { height: 4px; } 100% { height: 18px; } }
+        @keyframes active-wave { 0% { height: 4px; } 100% { height: 34px; } }
+    </style>
+</head>
+<body class="overflow-x-hidden min-h-screen flex flex-col justify-between selection:bg-cyan-200">
+
+<header class="bg-white/95 backdrop-blur-md border-b border-slate-200/80 p-4 sticky top-0 z-50 shadow-sm">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div class="flex items-center gap-3">
+            <div class="bg-gradient-to-tr from-cyan-500 to-blue-500 p-2.5 rounded-lg shadow-md shadow-cyan-500/10">
+                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                </svg>
+            </div>
+            <div>
+                <h1 class="heading-font text-xl md:text-2xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">Właściwości Wody</h1>
+                <p class="text-[10px] md:text-xs text-slate-500 tracking-wider font-bold"> Wykonał: OSKAR D.</p>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-4 bg-slate-50 px-4 py-2.5 rounded-lg border border-slate-200/80 shadow-inner">
+            <div id="narrator-avatar" class="relative w-10 h-10 rounded-full bg-cyan-100/80 flex items-center justify-center border border-cyan-300 overflow-hidden">
+                <span class="text-2xl">💧</span>
+            </div>
+            <div>
+                <div class="text-[11px] font-bold text-cyan-800">Lektor: Kropelka Krysia</div>
+                <div class="flex items-center gap-1.5 mt-0.5">
+                    <button onclick="toggleAudio()" id="btn-audio" class="px-2 py-0.5 text-[9px] bg-red-500 hover:bg-red-600 text-white font-extrabold rounded transition-all">Ucisz</button>
+                 <span class="text-[10px] text-slate-500 font-arial" id="audio-status">aktywna</span>
+                </div>
+            </div>
+            <div class="flex items-end gap-1 h-6 px-1" id="audio-waves">
+                <span class="wave-bar w-1 bg-cyan-500 rounded-full"></span>
+                <span class="wave-bar w-1 bg-cyan-500 rounded-full"></span>
+                <span class="wave-bar w-1 bg-cyan-500 rounded-full"></span>
+                <span class="wave-bar w-1 bg-cyan-500 rounded-full"></span>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="max-w-7xl mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 flex-grow items-start w-full">
+    <nav class="lg:col-span-3 bg-white border border-slate-200 rounded-lg p-3 flex flex-row lg:flex-col gap-2 overflow-x-auto shadow-sm">
+        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-2 hidden lg:block mb-2">Spis Treści</div>
+        <button onclick="changeSlide(0)" id="nav-0" class="nav-btn w-full text-left px-3.5 py-3 rounded-lg transition-all flex items-center gap-3 shrink-0 lg:shrink border border-transparent">
+            <span class="num-indicator bg-slate-100 text-slate-600 font-bold w-6 h-6 rounded flex items-center justify-center text-xs">1</span>
+            <span class="font-semibold text-sm">Czym jest woda?</span>
+        </button>
+        <button onclick="changeSlide(1)" id="nav-1" class="nav-btn w-full text-left px-3.5 py-3 rounded-lg transition-all flex items-center gap-3 shrink-0 lg:shrink border border-transparent">
+            <span class="num-indicator bg-slate-100 text-slate-600 font-bold w-6 h-6 rounded flex items-center justify-center text-xs">2</span>
+            <span class="font-semibold text-sm">Stany skupienia</span>
+        </button>
+        <button onclick="changeSlide(2)" id="nav-2" class="nav-btn w-full text-left px-3.5 py-3 rounded-lg transition-all flex items-center gap-3 shrink-0 lg:shrink border border-transparent">
+            <span class="num-indicator bg-slate-100 text-slate-600 font-bold w-6 h-6 rounded flex items-center justify-center text-xs">3</span>
+            <span class="font-semibold text-sm">Anomalia gęstości</span>
+        </button>
+        <button onclick="changeSlide(3)" id="nav-3" class="nav-btn w-full text-left px-3.5 py-3 rounded-lg transition-all flex items-center gap-3 shrink-0 lg:shrink border border-transparent">
+            <span class="num-indicator bg-slate-100 text-slate-600 font-bold w-6 h-6 rounded flex items-center justify-center text-xs">4</span>
+            <span class="font-semibold text-sm">Wpływ ciśnienia</span>
+        </button>
+        <button onclick="changeSlide(4)" id="nav-4" class="nav-btn w-full text-left px-3.5 py-3 rounded-lg transition-all flex items-center gap-3 shrink-0 lg:shrink border border-transparent">
+            <span class="num-indicator bg-slate-100 text-slate-600 font-bold w-6 h-6 rounded flex items-center justify-center text-xs">5</span>
+            <span class="font-semibold text-sm">Interaktywny Test</span>
+        </button>
+    </nav>
+
+    <section class="lg:col-span-9 bg-white border border-slate-200 rounded-lg p-6 min-h-[580px] flex flex-col justify-between relative shadow-sm">
+        
+        <div id="slide-0" class="slide-content space-y-6">
+            <div class="flex flex-col md:flex-row gap-8 items-center">
+                <div class="space-y-4 md:w-1/2">
+                    <span class="bg-cyan-100 text-cyan-800 text-xs font-bold px-3 py-1 rounded uppercase tracking-wider">Wprowadzenie</span>
+                    <h2 class="heading-font text-3xl md:text-4xl font-extrabold text-slate-900 leading-tight">Woda - Czy zawsze jest taka sama?</h2>
+                    <p class="text-slate-700 leading-relaxed text-sm">Gdy odkręcasz kran, widzisz przezroczystą ciecz. Ale woda zawsze ma inne właściwości pod wpływem temperatury i ciśnienia!</p>
+                </div>
+                <div class="md:w-1/2 flex justify-center">
+                    <div class="relative bg-slate-50 p-8 rounded border border-slate-200/85 w-full max-w-sm flex flex-col items-center justify-center text-center shadow-inner">
+                        <div class="w-32 h-36 relative flex flex-col items-center justify-center">
+                            <div class="dripping-mascot-container w-28 h-28 flex items-center justify-center drop-shadow-[0_8px_10px_rgba(6,182,212,0.15)]">
+                                <svg viewBox="0 0 100 100" class="w-full h-full"><path d="M50,10 C50,10 82,42 82,68 C82,84 68,90 50,90 C32,90 18,84 18,68 C18,42 50,10 50,10 Z" fill="#06b6d4" /><circle cx="38" cy="58" r="5" fill="#ffffff" /><circle cx="62" cy="58" r="5" fill="#ffffff" /><circle cx="40" cy="58" r="2.5" fill="#0f172a" /><circle cx="60" cy="58" r="2.5" fill="#0f172a" /><path d="M44,70 Q50,76 56,70" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" fill="none" /></svg>
+                            </div>
+                            <div class="dripping-particle absolute bottom-2 w-3.5 h-3.5 bg-cyan-500 rounded-full" style="border-radius: 0% 100% 50% 50% / 0% 50% 50% 100%; transform: rotate(45deg);"></div>
+                        </div>
+                        <h3 class="heading-font text-xl font-bold text-slate-800 mt-4">Kropelka Krysia</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="slide-1" class="slide-content space-y-6 hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-4">
+                    <h2 class="heading-font text-2xl font-extrabold text-slate-900">Molekularne Laboratorium</h2>
+                    <p class="text-sm">Przesuwaj suwak by sprawdzić stany skupienia!</p>
+                    <input type="range" id="temp-slider" min="-20" max="120" value="20" class="w-full h-2 bg-slate-200 rounded appearance-none cursor-pointer accent-cyan-500">
+                    <span id="temp-val" class="font-bold text-cyan-600">20°C</span>
+                </div>
+                <canvas id="moleculeCanvas" class="w-full h-64 rounded bg-white border border-slate-200"></canvas>
+            </div>
+        </div>
+
+        <div id="slide-2" class="slide-content space-y-6 hidden">
+            <h2 class="heading-font text-2xl font-extrabold">Anomalia Gęstości (4°C)</h2>
+            <div id="density-explain" class="bg-indigo-50 p-4 border border-indigo-100 rounded text-sm text-indigo-900"></div>
+        </div>
+
+        <div id="slide-3" class="slide-content space-y-6 hidden">
+            <h2 class="heading-font text-2xl font-extrabold">Wpływ Ciśnienia</h2>
+            <div id="pressure-fact" class="bg-teal-50 p-4 border border-teal-100 rounded text-sm text-teal-900"></div>
+        </div>
+
+        <div id="slide-4" class="slide-content space-y-6 hidden">
+            <h2 class="heading-font text-2xl font-extrabold">Test Sprawdzający</h2>
+            <div id="quiz-container" class="bg-slate-50 p-4 rounded border">
+                <div id="quiz-question" class="font-bold mb-4"></div>
+                <div id="quiz-options" class="grid grid-cols-1 gap-2"></div>
+            </div>
+            <div id="quiz-result" class="hidden text-center py-6">Wynik końcowy: <span id="quiz-final-text"></span></div>
+        </div>
+
+        <div class="mt-8 pt-4 border-t flex justify-between items-center">
+            <button onclick="prevSlide()" id="btn-prev" class="px-4 py-2 bg-slate-100 rounded font-bold text-sm">Wstecz</button>
+            <div class="flex gap-2" id="slide-indicators"></div>
+            <button onclick="nextSlide()" id="btn-next" class="px-4 py-2 bg-cyan-600 text-white rounded font-bold text-sm">Dalej</button>
+        </div>
+    </section>
+</main>
+
+<script>
+
+const customAudioPaths = [
+    "", 
+    "", 
+    "", 
+    "", 
+    ""  
+];
+
+let currentSlide = 0;
+let audioEnabled = true;
+let currentAudioElement = null;
+
+function playSlideAudio(slideIndex) {
+    stopAllAudio();
+    if (!audioEnabled) return;
+
+    const path = customAudioPaths[slideIndex];
+    if (path && path.trim() !== "") {
+        try {
+            updateSpeechUIActive();
+            currentAudioElement = new Audio(path);
+            currentAudioElement.onended = () => resetSpeechUI();
+            currentAudioElement.play();
+        } catch(e) { console.error("Błąd odtwarzania:", e); }
+    }
+}
+
+function stopAllAudio() {
+    if (currentAudioElement) {
+        currentAudioElement.pause();
+        currentAudioElement.currentTime = 0;
+        currentAudioElement = null;
+    }
+    resetSpeechUI();
+}
+
+function updateSpeechUIActive() {
+    const avatar = document.getElementById('narrator-avatar');
+    const waves = document.getElementById('audio-waves');
+    document.getElementById('audio-status').innerText = "mówi...";
+    avatar.classList.add('speaking');
+    waves.classList.add('speaking');
+}
+
+function resetSpeechUI() {
+    document.getElementById('audio-status').innerText = audioEnabled ? "aktywna" : "wyłączona";
+    document.getElementById('narrator-avatar').classList.remove('speaking');
+    document.getElementById('audio-waves').classList.remove('speaking');
+}
+
+function toggleAudio() {
+    audioEnabled = !audioEnabled;
+    const btn = document.getElementById('btn-audio');
+    btn.innerText = audioEnabled ? "Ucisz" : "Mów";
+    if (audioEnabled) playSlideAudio(currentSlide);
+    else stopAllAudio();
+}
+
+function changeSlide(slideNum) {
+    document.querySelectorAll('.slide-content').forEach(el => el.classList.add('hidden'));
+    document.getElementById(`slide-${slideNum}`).classList.remove('hidden');
+    
+    currentSlide = slideNum;
+    playSlideAudio(currentSlide);
+
+}
+
+function nextSlide() { if(currentSlide < 4) changeSlide(currentSlide + 1); }
+function prevSlide() { if(currentSlide > 0) changeSlide(currentSlide - 1); }
+
+window.onload = () => changeSlide(0);
+
+const quizQuestions = [
+    { q: "Gęstość wody jest największa w temperaturze:", options: ["0°C", "4°C", "10°C", "100°C"], correct: 1 },
+    { q: "Lód pływa po wodzie, ponieważ:", options: ["jest cięższy", "jest rzadszy", "ma mniejszą gęstość", "jest z gazu"], correct: 2 },
+    { q: "Woda wrze w temperaturze 100°C przy:", options: ["każdym ciśnieniu", "ciśnieniu standardowym", "bardzo niskim ciśnieniu", "w próżni"], correct: 1 },
+    { q: "Co to jest dipol w chemii wody?", options: ["cząsteczka polarna", "cząsteczka obojętna", "gaz", "ciało stałe"], correct: 0 },
+    { q: "Jaki stan skupienia mają cząsteczki w lodzie?", options: ["chaos", "drgają w sieci", "pędzą", "parują"], correct: 1 },
+    { q: "W szybkowarze woda wrze w temperaturze:", options: ["80°C", "100°C", "120°C", "50°C"], correct: 2 }
+];
+</script>
+</body>
+</html>
